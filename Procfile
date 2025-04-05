@@ -1,1 +1,1 @@
-web: python3 agent_medical.py
+web: gunicorn -b 0.0.0.0:$PORT agent_medical:app
