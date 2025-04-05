@@ -15,4 +15,6 @@ def analyze():
     return jsonify({"role": "medical", "advice": advice})
 
 if __name__ == "__main__":
-    app.run(port=5001)
+    import os
+    port = int(os.environ.get("PORT", 5001))
+    app.run(host="0.0.0.0", port=port)
