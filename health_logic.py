@@ -1,34 +1,25 @@
-# 📁 文件: medical_agent/health_logic.py
 import os
-import requests
+import google.generativeai as genai
 from dotenv import load_dotenv
 
 load_dotenv()
-DEEPSEEK_API_KEY = os.getenv("DEEPSEEK_API_KEY")
+genai.configure(api_key=os.getenv("GEMINI_API_KEY"))
+
+model = genai.GenerativeModel("gemini-pro")
 
 def get_health_advice(symptom: str) -> str:
-    return "建议多休息、多喝水、避免辛辣食物。"
-    headers = {
-        "Authorization": f"Bearer {DEEPSEEK_API_KEY}",
-        "Content-Type": "application/json"
-    }
+    prompt = f"""
+你是一位中文家庭医生，请根据以下症状提供简洁、实用的健康建议：
 
-    data = {
-        "model": "deepseek-chat",
-        "messages": [
-            {"role": "system", "content": "你是一位中文家庭医生，提供简洁、温和的健康建议"},
-            {"role": "user", "content": f"我最近的症状是：{symptom}。请给出初步建议"}
-        ],
-        "temperature": 0.7
-    }
+症状：{symptom}
 
+要求：
+- 用中文回答
+- 建议包括：可能原因 + 初步应对措施 + 是否建议就医
+- 使用简洁段落
+"""
     try:
-        response = requests.post(
-            "https://api.deepseek.com/v1/chat/completions",
-            headers=headers,
-            json=data
-        )
-        response.raise_for_status()
-        return response.json()["choices"][0]["message"]["content"]
+        response = model.generate_content(prompt)
+        return response.text.strip()
     except Exception as e:
-        return f"调用 DeepSeek 失败：{str(e)}"
+        return f"调用 Gemini 失败：{str(e)}"
