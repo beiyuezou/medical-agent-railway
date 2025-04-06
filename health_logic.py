@@ -4,7 +4,7 @@ from dotenv import load_dotenv
 
 load_dotenv()
 genai.configure(api_key=os.getenv("GEMINI_API_KEY"))
-model = genai.GenerativeModel("gemini-pro")
+model = genai.GenerativeModel("gemini-pro", generation_config={"temperature": 0.7})
 
 def get_health_advice(symptom: str) -> str:
     prompt = f"""
