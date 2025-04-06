@@ -9,7 +9,7 @@ load_dotenv()
 genai.configure(api_key=os.getenv("GEMINI_API_KEY"))
 
 # ✅ 使用明确的模型名（适配 v1 接口）
-model = genai.GenerativeModel("gemini-1.0-pro")
+model = genai.GenerativeModel("gemini-pro", generation_config={"temperature": 0.7})
 
 def get_health_advice(symptom: str) -> str:
     print("🚀 正在调用 Gemini 模型，症状内容:", symptom)
